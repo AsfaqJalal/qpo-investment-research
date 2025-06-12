@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QPo Cabs - Investment Research Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- 
+    Infographic Plan Summary:
+    Narrative Structure: The infographic follows a logical flow:
+    1. Introduction & Market Opportunity: Hook with the large market size.
+    2. Target Audience & Commuter Pain Points: Define who the customer is and what problems they face.
+    3. QPo's Solution & Competitive Edge: Position QPo as the solution and analyze its differentiators.
+    4. Financial Deep Dive: Showcase traction, unit economics, and growth projections.
+    5. Strategic Roadmap & Funding: Detail the growth plan and how the investment will be used.
+    6. Risks & Conclusion: Provide a balanced view by outlining potential headwinds.
+
+    Visualization Choices Summary (NO SVG or Mermaid JS used):
+    - Market Size (TAM/SAM/SOM): Goal: Inform/Compare. Visualization: Bar Chart (Chart.js/Canvas). Justification: Clear comparison of claimed vs. actuals.
+    - Target Commuter Segments: Goal: Compare. Visualization: Donut Chart (Chart.js/Canvas). Justification: Shows composition effectively.
+    - Commuter Pain Points: Goal: Organize. Visualization: Styled HTML/CSS cards. Justification: Easy-to-digest qualitative info.
+    - Competitive Features: Goal: Compare. Visualization: Radar Chart (Chart.js/Canvas). Justification: Excellent for multi-attribute comparison.
+    - Financial Projections (Revenue/Trips): Goal: Show Change. Visualization: Line Chart (Chart.js/Canvas). Justification: Best for time-series trends.
+    - Unit Economics: Goal: Inform. Visualization: Styled HTML/CSS "Big Number" Cards. Justification: Highlights key financial metrics.
+    - Use of Funds: Goal: Compare. Visualization: Pie Chart (Chart.js/Canvas). Justification: Standard for showing proportional allocation.
+    - Strategic Roadmap: Goal: Organize. Visualization: HTML/CSS Flowchart. Justification: Shows process flow using permitted tech.
+
+    Color Palette: "Brilliant Blues" (#003f5c, #374c80, #7a5195, #bc5090, #ef5675, #ff764a, #ffa600) chosen for a vibrant, professional aesthetic.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-[#003f5c] text-white p-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-shadow">QPo Cabs: An Investment Deep Dive</h1>
+        <p class="mt-4 text-lg text-gray-300">Visualizing the Opportunity in India's Shared Mobility Market</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="market-opportunity" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">A Multi-Billion Dollar Market Opportunity</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">QPo is tapping into the vast Indian transportation sector. While their market definition is ambitious, the underlying opportunity in ride-hailing and last-mile connectivity is substantial and growing.</p>
+            <div class="bg-white rounded-lg shadow-xl p-6">
+                <div class="chart-container mx-auto">
+                    <canvas id="marketSizeChart"></canvas>
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-4">The chart compares QPo's market size claims against independent research for the ride-hailing and last-mile sectors. This highlights the significant, verifiable opportunity in the Asia-Pacific rickshaw hailing market, which aligns more closely with QPo's serviceable market.</p>
+            </div>
+        </section>
+
+        <section id="target-audience" class="mb-12">
+             <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">Understanding the Urban Commuter</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">QPo targets a massive base of daily commuters, including professionals, students, and women, who face significant challenges with existing transport options.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-lg shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-center text-[#374c80] mb-4">Target Market Composition</h3>
+                    <div class="chart-container mx-auto h-80 max-h-[350px]">
+                        <canvas id="targetAudienceChart"></canvas>
+                    </div>
+                     <p class="text-center text-sm text-gray-500 mt-4">This chart breaks down QPo's primary target segments, demonstrating a large and diverse potential user base facing daily commuting challenges.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-center text-[#374c80] mb-4">Key Commuter Pain Points</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start p-4 bg-red-50 rounded-lg">
+                            <span class="text-3xl mr-4">💸</span>
+                            <div>
+                                <h4 class="font-semibold">Prohibitive Costs</h4>
+                                <p class="text-gray-600">Traditional ride-hailing is expensive for daily use, while informal autos often overcharge without regulation.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-yellow-50 rounded-lg">
+                             <span class="text-3xl mr-4">⏱️</span>
+                            <div>
+                                <h4 class="font-semibold">Wasted Time & Inconvenience</h4>
+                                <p class="text-gray-600">Commuters suffer from long waits for overcrowded public transport and unreliable informal services.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start p-4 bg-blue-50 rounded-lg">
+                             <span class="text-3xl mr-4">🛡️</span>
+                            <div>
+                                <h4 class="font-semibold">Safety & Security Risks</h4>
+                                <p class="text-gray-600">Informal autos are untracked and often unsafe. Women, in particular, face significant harassment and security threats during their commute.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competitive-landscape" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">Navigating a Competitive Landscape</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">QPo enters a market with established giants but carves a niche with key differentiators. Its model addresses gaps left by both direct and indirect competitors.</p>
+            <div class="bg-white rounded-lg shadow-xl p-6">
+                <h3 class="text-xl font-bold text-center text-[#7a5195] mb-4">Competitive Feature Analysis</h3>
+                <div class="chart-container mx-auto">
+                    <canvas id="competitorRadarChart"></canvas>
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-4">This radar chart visualizes QPo's competitive positioning. It highlights strengths in specialized areas like Metro-linked Rides and Subscriptions, while showing that its Fixed Driver Pay model is aligning with an emerging industry trend adopted by giants like Uber and Rapido.</p>
+            </div>
+        </section>
+        
+        <section id="financials" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">Financial Projections & Unit Economics</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">QPo projects an aggressive but clear path to profitability, fueled by rapid fleet expansion and positive unit economics. The company has demonstrated promising early traction.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-xl p-6">
+                     <h3 class="text-xl font-bold text-center text-[#bc5090] mb-4">Growth Projections (FY25-FY26)</h3>
+                    <div class="chart-container mx-auto">
+                        <canvas id="growthProjectionsChart"></canvas>
+                    </div>
+                     <p class="text-center text-sm text-gray-500 mt-4">QPo projects exponential growth in trips and revenue, driven by a strategic ramp-up of its fleet. Achieving these targets is key to reaching operational breakeven by Q4 FY25.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-xl p-6 flex flex-col justify-center">
+                    <h3 class="text-xl font-bold text-center text-[#bc5090] mb-4">Unit Economics Per Ride</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-green-100 p-4 rounded-lg">
+                            <p class="text-sm text-green-800">Average Fare</p>
+                            <p class="text-3xl font-bold text-green-900">₹56</p>
+                        </div>
+                        <div class="bg-red-100 p-4 rounded-lg">
+                            <p class="text-sm text-red-800">Driver Payout</p>
+                            <p class="text-3xl font-bold text-red-900">₹30</p>
+                        </div>
+                         <div class="bg-blue-100 p-4 rounded-lg col-span-2">
+                            <p class="text-sm text-blue-800">Contribution Margin 1</p>
+                            <p class="text-4xl font-extrabold text-blue-900">₹23</p>
+                             <p class="text-xs text-gray-500">(24% Take Rate)</p>
+                        </div>
+                         <div class="bg-purple-100 p-4 rounded-lg col-span-2">
+                            <p class="text-sm text-purple-800">Final EBITDA per Ride</p>
+                            <p class="text-4xl font-extrabold text-purple-900">₹2</p>
+                        </div>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">These figures illustrate a viable path to profitability on a per-ride basis, though the 24% take rate is vulnerable to potential regulatory changes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">Strategy, Funding, and Roadmap</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">A ₹2 Cr seed round will fuel an ambitious roadmap focused on operational expansion, market penetration, and service diversification.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 bg-white rounded-lg shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-center text-[#ef5675] mb-6">Strategic Roadmap to Scale</h3>
+                    <div class="flex flex-col space-y-4">
+                        <div class="flex items-center">
+                            <div class="bg-[#ef5675] text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl z-10">1</div>
+                            <div class="border-t-4 border-dashed border-[#ef5675] flex-grow -ml-2"></div>
+                             <div class="bg-gray-100 p-4 rounded-lg shadow-md -ml-2 flex-grow">
+                                <h4 class="font-semibold">FY25: Scale & Breakeven</h4>
+                                <p class="text-sm text-gray-600">Expand fleet to 50 vehicles in Chennai. Achieve operational breakeven at ₹6L MRR.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-center">
+                            <div class="bg-[#ff764a] text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl z-10">2</div>
+                            <div class="border-t-4 border-dashed border-[#ff764a] flex-grow -ml-2"></div>
+                             <div class="bg-gray-100 p-4 rounded-lg shadow-md -ml-2 flex-grow">
+                                <h4 class="font-semibold">Jan 2026: Diversify Revenue</h4>
+                                <p class="text-sm text-gray-600">Launch Cab model, B2B services, Advertising, and Subscription plans.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                             <div class="bg-[#ffa600] text-white rounded-full h-12 w-12 flex items-center justify-center font-bold text-xl z-10">3</div>
+                             <div class="border-t-4 border-dashed border-[#ffa600] flex-grow -ml-2"></div>
+                              <div class="bg-gray-100 p-4 rounded-lg shadow-md -ml-2 flex-grow">
+                                <h4 class="font-semibold">FY26: Multi-City Expansion</h4>
+                                <p class="text-sm text-gray-600">Expand to 3 more cities and grow the fleet to over 100 vehicles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="lg:col-span-2 bg-white rounded-lg shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-center text-[#ef5675] mb-4">Allocation of ₹2 Cr Seed Fund</h3>
+                    <div class="chart-container mx-auto h-80 max-h-[350px]">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">The fund allocation prioritizes operations and marketing, reflecting a clear focus on scaling the fleet and acquiring customers in the initial growth phase.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="risks" class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-[#003f5c] mb-2">Key Headwinds & Investment Risks</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">While promising, the investment carries significant risks that require careful monitoring and mitigation strategies.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-red-500">
+                    <h4 class="font-bold text-lg text-red-700">📜 Regulatory Hurdles</h4>
+                    <p class="mt-2 text-gray-600">Evolving aggregator policies, like take rate caps (e.g., 5-8% in Maharashtra), pose a direct threat to QPo's 24% margin and overall profitability.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-orange-500">
+                    <h4 class="font-bold text-lg text-orange-700">⚔️ Intense Competition</h4>
+                    <p class="mt-2 text-gray-600">The market is dominated by well-funded players (Ola, Uber, Rapido) who are now adopting similar fixed-pay driver models, diluting QPo's key differentiator.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-yellow-500">
+                    <h4 class="font-bold text-lg text-yellow-700">⚙️ Operational Complexity</h4>
+                    <p class="mt-2 text-gray-600">Rapidly scaling from 4 to 50+ vehicles while maintaining high utilization and positive unit economics is a significant execution challenge.</p>
+                </div>
+                 <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-teal-500 md:col-span-2 lg:col-span-3">
+                    <h4 class="font-bold text-lg text-teal-700">⛽ High Fuel Costs & The EV Imperative</h4>
+                    <p class="mt-2 text-gray-600">QPo's implied fuel cost per km is significantly higher than benchmarks. A strategic and rapid transition to a cost-efficient Electric Vehicle (EV) fleet is not just an opportunity but a critical necessity for long-term financial sustainability.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-[#003f5c] text-white p-4 text-center text-sm">
+        <p>Infographic generated based on the QPo Cabs Investment Research Report. For internal analysis only.</p>
+        <p>&copy; 2025. All data derived from provided source materials.</p>
+    </footer>
+
+    <script>
+        const brilliantBlues = ['#003f5c', '#7a5195', '#ef5675', '#ffa600', '#374c80', '#bc5090', '#ff764a'];
+        const chartTextColor = '#37474F';
+        
+        function wrapLabel(label, maxLength = 16) {
+            if (label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).trim().length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            });
+            if (currentLine) {
+                lines.push(currentLine.trim());
+            }
+            return lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            return Array.isArray(label) ? label.join(' ') : label;
+        };
+
+        const defaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: chartTextColor,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 10,
+                    cornerRadius: 4
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: chartTextColor, font: { size: 12 } },
+                    grid: { display: false }
+                },
+                y: {
+                    ticks: { color: chartTextColor, font: { size: 12 } },
+                    grid: { color: '#e0e0e0', borderDash: [2, 4] }
+                }
+            }
+        };
+
+        const marketSizeData = {
+            labels: [
+                wrapLabel('TAM (QPo Claim)'),
+                wrapLabel('SAM (QPo Claim)'),
+                wrapLabel('SOM (QPo Claim)'),
+                wrapLabel('Asia-Pacific Rickshaw Ride-hailing'),
+                wrapLabel('India Last-Mile Delivery')
+            ],
+            datasets: [{
+                label: 'Market Size (USD Billions)',
+                data: [20, 3, 1, 2.5, 6.5],
+                backgroundColor: [brilliantBlues[0], brilliantBlues[1], brilliantBlues[2], brilliantBlues[3], brilliantBlues[4]],
+                borderColor: '#ffffff',
+                borderWidth: 1
+            }]
+        };
+        new Chart(document.getElementById('marketSizeChart'), {
+            type: 'bar',
+            data: marketSizeData,
+            options: { ...defaultChartOptions, indexAxis: 'y' }
+        });
+        
+        const targetAudienceData = {
+            labels: ['Working Professionals', 'College Students', 'Women Commuters'],
+            datasets: [{
+                label: 'Target Audience',
+                data: [70, 40, 39],
+                backgroundColor: [brilliantBlues[1], brilliantBlues[2], brilliantBlues[3]],
+                hoverOffset: 4
+            }]
+        };
+        new Chart(document.getElementById('targetAudienceChart'), {
+            type: 'doughnut',
+            data: targetAudienceData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: chartTextColor } },
+                     tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+        const competitorData = {
+            labels: [
+                wrapLabel('Metro-Linked Focus'), 
+                'Female-Only Rides', 
+                'Subscriptions', 
+                wrapLabel('Fixed Driver Pay'), 
+                'App-based',
+                wrapLabel('Price vs Cabs')
+            ],
+            datasets: [{
+                label: 'QPo Cabs',
+                data: [5, 5, 5, 4, 5, 5],
+                fill: true,
+                backgroundColor: 'rgba(0, 63, 92, 0.2)',
+                borderColor: brilliantBlues[0],
+                pointBackgroundColor: brilliantBlues[0],
+            }, {
+                label: 'Ola/Uber Auto',
+                data: [2, 2, 1, 4, 5, 4],
+                fill: true,
+                backgroundColor: 'rgba(239, 86, 117, 0.2)',
+                borderColor: brilliantBlues[2],
+                pointBackgroundColor: brilliantBlues[2],
+            }, {
+                label: 'Informal Autos',
+                data: [3, 0, 0, 0, 0, 5],
+                fill: true,
+                backgroundColor: 'rgba(255, 166, 0, 0.2)',
+                borderColor: brilliantBlues[3],
+                pointBackgroundColor: brilliantBlues[3],
+            }]
+        };
+        new Chart(document.getElementById('competitorRadarChart'), {
+            type: 'radar',
+            data: competitorData,
+            options: {
+                 responsive: true,
+                 maintainAspectRatio: false,
+                 plugins: {
+                     legend: { position: 'bottom', labels: { color: chartTextColor } },
+                     tooltip: { callbacks: { title: tooltipTitleCallback } }
+                 },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e0e0e0' },
+                        grid: { color: '#e0e0e0' },
+                        pointLabels: { font: { size: 12 }, color: chartTextColor },
+                        ticks: { backdropColor: 'white', color: chartTextColor, stepSize: 1 },
+                        suggestedMin: 0,
+                        suggestedMax: 5
+                    }
+                }
+            }
+        });
+        
+        const growthProjectionsData = {
+            labels: ['FY25 Q1', 'FY25 Q2', 'FY25 Q3', 'FY25 Q4', 'FY26 Q1', 'FY26 Q2', 'FY26 Q3', 'FY26 Q4'],
+            datasets: [{
+                label: 'Total Trips (in thousands)',
+                data: [3, 10, 30, 55, 90, 110, 160, 200],
+                borderColor: brilliantBlues[2],
+                backgroundColor: 'rgba(239, 86, 117, 0.5)',
+                yAxisID: 'y',
+                tension: 0.3,
+                type: 'line',
+                fill: true
+            }, {
+                label: 'B2C Revenue (in Lakhs ₹)',
+                data: [1.7, 5.5, 14.6, 25.2, 42.7, 53, 78.2, 105.3],
+                borderColor: brilliantBlues[3],
+                backgroundColor: 'rgba(255, 166, 0, 0.5)',
+                yAxisID: 'y1',
+                type: 'line',
+                tension: 0.3
+            }]
+        };
+        new Chart(document.getElementById('growthProjectionsChart'), {
+            type: 'line',
+            data: growthProjectionsData,
+            options: {
+                ...defaultChartOptions,
+                scales: {
+                    x: { ...defaultChartOptions.scales.x },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Total Trips (Thousands)', color: chartTextColor },
+                        ticks: { color: chartTextColor }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'Revenue (₹ Lakhs)', color: chartTextColor },
+                        grid: { drawOnChartArea: false },
+                        ticks: { color: chartTextColor }
+                    }
+                }
+            }
+        });
+
+        const fundingData = {
+            labels: ['Operations', 'Marketing', 'Team', 'Others'],
+            datasets: [{
+                label: 'Use of Funds',
+                data: [53, 34, 11, 2],
+                backgroundColor: [brilliantBlues[4], brilliantBlues[5], brilliantBlues[6], '#cccccc'],
+                hoverOffset: 4
+            }]
+        };
+        new Chart(document.getElementById('fundingChart'), {
+            type: 'pie',
+            data: fundingData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                     legend: { position: 'bottom', labels: { color: chartTextColor } },
+                     tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
