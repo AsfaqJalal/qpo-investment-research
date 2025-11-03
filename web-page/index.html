@@ -3,19 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QPo Investment Memo - Interactive Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Chosen Palette: VC Neutral (Stone, Slate, with Blue accent) -->
-    <!-- Application Structure Plan: A tabbed-dashboard SPA structure was chosen over a linear report. This information architecture allows a VC analyst (the user) to non-linearly access the most critical information. The user can immediately jump to 'Deal Summary' for the "ask" and "recommendation," dive into 'Risks & Tailwinds' to assess the balance, or check 'Financials' for projections. This task-oriented navigation (Deal, Market, Risks) is more usable and efficient for decision-making than scrolling a long document. Interactions (charts, tables) are embedded within these logical sections to provide dynamic data exactly where it's needed. -->
-    <!-- Visualization & Content Choices: 
-        1. Market Size (Pitch): Report Info -> $870M TAM, $435M SAM, $25M SOM. Goal -> Visualize scale and ambition. Viz/Presentation -> Bar Chart. Interaction -> Tooltip on hover. Justification -> Instantly compare the 3 market tiers. Library -> Chart.js (Canvas).
-        2. Financial Projections (Memo): Report Info -> Projected MRR (₹4.8L to ₹75L). Goal -> Show growth trajectory to breakeven/Series A. Viz/Presentation -> Line Chart. Interaction -> Tooltip on hover. Justification -> Clearly illustrates growth over time. Library -> Chart.js (Canvas).
-        3. Competitor Matrix: Report Info -> Namma Yatri, Ola/Uber, Unorganized. Goal -> Compare threats directly. Viz/Presentation -> HTML Table. Interaction -> None (static comparison). Justification -> Best format for dense, comparative text. Library -> HTML/Tailwind.
-        4. Risks/Tailwinds: Report Info -> Metro, Policy, Regulation, Driver Churn. Goal -> Present a balanced view of pros/cons. Viz/Presentation -> 2-Column HTML/Grid layout. Interaction -> None. Justification -> Simple, scannable "T-diagram" layout. Library -> HTML/Tailwind.
+    <title>QPo Cabs: Investment Diligence</title>
+    <!-- Chosen Palette: "Calm Harmony" (Warm Neutrals: bg-gray-50, bg-white, text-gray-800) with a professional "Emerald" accent (emerald-700, emerald-600) -->
+    <!-- Application Structure Plan: A top-bar navigation SPA. The user lands on a "Summary & Deal" dashboard with key metrics (the "ask", traction, use of funds). The sticky navigation bar allows non-linear exploration of other diligence sections: "Market Analysis", "Competitive Landscape", "Moats & Risk Analysis", "Team & Valuation", and a final "Recommendation". This structure is chosen for usability, mirroring an analyst's workflow, allowing them to either get the high-level summary instantly or deep-dive into specific areas of concern (like Competition or Risks) in any order. -->
+    <!-- Visualization & Content Choices:
+        - Summary / Use of Funds: Goal(Inform-Proportion). Viz(Doughnut Chart). Interaction(Hover). Justification(Standard for budgets). Library(Chart.js).
+        - Summary / Key Metrics: Goal(Inform). Viz(KPI Cards - HTML/Tailwind). Interaction(None). Justification(Quick, scannable data). Library(N/A).
+        - Market / Sizing: Goal(Compare-Scale). Viz(Bar Chart w/ Log scale). Interaction(Hover). Justification(Shows vast scale difference in TAM/SAM/SOM). Library(Chart.js).
+        - Market / Modal Split: Goal(Inform-Proportion). Viz(Pie Chart). Interaction(Hover). Justification(Shows competitor modal share). Library(Chart.js).
+        - Competition / Analysis: Goal(Compare). Viz(Interactive Tabs - HTML/JS). Interaction(Click). Justification(Organizes dense text, more engaging than a static table). Library(N/A).
+        - Moats / Unit Economics: Goal(Inform-Composition). Viz(Horizontal Stacked Bar). Interaction(Hover). Justification(Visually breaks down revenue vs. cost per ride). Library(Chart.js).
+        - Risks / Headwinds: Goal(Inform). Viz(Bulleted List - HTML/Tailwind). Interaction(None). Justification(Clearly enumerates critical risks). Library(N/A).
+        - Team / Profiles: Goal(Inform). Viz(Cards - HTML/Tailwind). Interaction(None). Justification(Clean bio presentation). Library(N/A).
+        - Valuation / Comparables: Goal(Compare). Viz(Table - HTML/Tailwind). Interaction(None). Justification(Standard for valuation benchmarking). Library(N/A).
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
         .chart-container {
             position: relative;
             width: 100%;
@@ -30,365 +40,475 @@
                 height: 350px;
             }
         }
-        .nav-tab.active {
-            border-color: #2563eb;
-            color: #2563eb;
+
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-sm font-medium text-emerald-100 hover:bg-emerald-700 hover:text-white transition-colors duration-150;
+        }
+        .nav-link-active {
+            @apply bg-emerald-900 text-white;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .kpi-card {
+            @apply bg-white p-6 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg;
+        }
+        
+        .tab-button {
+            @apply px-4 py-2 font-medium text-sm rounded-lg transition-all duration-200;
+        }
+        .tab-button-active {
+            @apply bg-emerald-600 text-white shadow-md;
+        }
+        .tab-button-inactive {
+            @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
         }
     </style>
 </head>
-<body class="bg-stone-50 font-sans text-slate-800 antialiased">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-        
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-slate-900">QPo (Unovay Technologies)</h1>
-            <h2 class="text-xl text-slate-600">Internal Investment Memo: Deep Research Analysis</h2>
-        </header>
-
-        <div>
-            <div class="flex flex-wrap border-b border-slate-300 mb-6 -mx-4 px-4">
-                <button class="nav-tab active py-2 px-4 -mb-px border-b-2 font-medium text-slate-500 hover:text-blue-700 focus:outline-none" data-target="content-summary">
-                    Deal Summary & Verdict
-                </button>
-                <button class="nav-tab py-2 px-4 -mb-px border-b-2 font-medium text-slate-500 hover:text-blue-700 focus:outline-none" data-target="content-market">
-                    Market Opportunity
-                </button>
-                <button class="nav-tab py-2 px-4 -mb-px border-b-2 font-medium text-slate-500 hover:text-blue-700 focus:outline-none" data-target="content-competitive">
-                    Competitive & Moat
-                </button>
-                <button class="nav-tab py-2 px-4 -mb-px border-b-2 font-medium text-slate-500 hover:text-blue-700 focus:outline-none" data-target="content-risks">
-                    Risks & Tailwinds
-                </button>
-                <button class="nav-tab py-2 px-4 -mb-px border-b-2 font-medium text-slate-500 hover:text-blue-700 focus:outline-none" data-target="content-financials">
-                    Financials & Team
-                </button>
+    <header class="sticky top-0 z-50 bg-emerald-800 text-white shadow-lg">
+        <nav class="container mx-auto flex flex-col md:flex-row justify-between items-center p-4">
+            <h1 class="text-2xl font-bold">QPo Cabs: Investment Diligence</h1>
+            <div class="flex flex-wrap justify-center space-x-1 md:space-x-2 mt-2 md:mt-0">
+                <button class="nav-link nav-link-active" data-target="summary">Summary & Deal</button>
+                <button class="nav-link" data-target="market">Market Analysis</button>
+                <button class="nav-link" data-target="competition">Competition</button>
+                <button class="nav-link" data-target="moats-risks">Moats & Risks</button>
+                <button class="nav-link" data-target="team-valuation">Team & Valuation</button>
+                <button class="nav-link" data-target="recommendation">Recommendation</button>
             </div>
+        </nav>
+    </header>
 
-            <div id="content-summary" class="tab-content">
-                <p class="text-lg text-slate-700 mb-6">
-                    This section summarizes the investment opportunity, key traction metrics, and our preliminary recommendation. QPo is raising a Seed round to scale its hotspot-based shared auto network in Chennai.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-3">The Ask</h3>
-                        <div class="text-4xl font-bold text-blue-700 mb-2">₹2 Cr</div>
-                        <div class="text-lg text-slate-600">at <span class="font-semibold text-slate-800">₹15 Cr</span> Post-Money</div>
-                        <div class="text-sm text-slate-500">(implies ₹13 Cr Pre-Money)</div>
-                        
-                        <h3 class="text-lg font-semibold text-slate-900 mt-6 mb-3">Traction (as of Oct 2025)</h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-center">
-                                <span class="text-green-500 mr-2">▶</span>
-                                <span class="font-semibold">5,000+</span>&nbsp;Customers Served
-                            </li>
-                            <li class="flex items-center">
-                                <span class="text-green-500 mr-2">▶</span>
-                                <span class="font-semibold">2,000+</span>&nbsp;Trips Completed
-                            </li>
-                            <li class="flex items-center">
-                                <span class="text-green-500 mr-2">▶</span>
-                                <span class="font-semibold">₹2.5L+</span>&nbsp;Revenue Generated
-                            </li>
-                            <li class="flex items-center">
-                                <span class="text-green-500 mr-2">▶</span>
-                                Incubated at IIT Madras
-                            </li>
-                        </ul>
-                    </div>
+    <main class="container mx-auto p-4 md:p-8">
 
-                    <div class="bg-blue-50 p-6 rounded-lg shadow-md border border-blue-200 col-span-1 md:col-span-2">
-                        <h3 class="text-lg font-semibold text-slate-900 mb-3">Analyst Recommendation</h3>
-                        <div class="text-3xl font-bold text-green-700 mb-4">Go (Conditional)</div>
-                        <p class="text-slate-700 mb-4">
-                            The market for first/last-mile connectivity is enormous and unsolved. QPo's hotspot model is the right approach, and the IITM ecosystem provides a strong initial network.
-                        </p>
-                        <p class="text-slate-700 mb-6">
-                            However, the valuation is high for current traction. The investment is a bet on the team's execution and the model's defensibility against incumbents.
-                        </p>
-                        
-                        <h4 class="font-semibold text-slate-900 mb-3">Key Questions for Founders:</h4>
-                        <ul class="space-y-3 list-decimal list-outside pl-5 text-slate-700">
-                            <li>
-                                What is the precise operational playbook to scale from 10 to 1,000 drivers in 12 months, and how will you manage driver retention against Ola/Namma Yatri?
-                            </li>
-                            <li>
-                                Walk us through the unit economics from a *driver's perspective*. How does your algorithm demonstrably increase their net daily earnings?
-                            </li>
-                            <li>
-                                Why won't Ola/Uber/Rapido deploy a similar 'shared auto' feature with heavy subsidies and destroy the model once you've proven it? What is the *real* moat?
-                            </li>
-                            <li>
-                                What are the specific, non-obvious regulatory hurdles for a *shared* auto aggregator license in Tamil Nadu, and how is the ₹15L budget allocated?
-                            </li>
-                        </ul>
-                    </div>
+        <section id="summary" class="content-section active">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Summary & The Deal</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                This report synthesizes our deep-dive diligence on QPo Cabs, a pre-seed shared auto-rickshaw mobility platform. This section provides a high-level overview of the investment opportunity, key traction metrics, and the proposed use of funds.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="kpi-card text-center">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">The Ask</h3>
+                    <p class="text-4xl font-bold text-emerald-600 mt-2">₹2 Cr</p>
+                    <p class="text-gray-600">Pre-Seed Round</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Post-Money Valuation</h3>
+                    <p class="text-4xl font-bold text-emerald-600 mt-2">₹15 Cr</p>
+                    <p class="text-gray-600">(13.33% Dilution)</p>
+                </div>
+                <div class="kpi-card text-center">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Bootstrapped Traction</h3>
+                    <p class="text-4xl font-bold text-emerald-600 mt-2">2,000+</p>
+                    <p class="text-gray-600">Trips Completed</p>
                 </div>
             </div>
-
-            <div id="content-market" class="tab-content hidden">
-                <p class="text-lg text-slate-700 mb-6">
-                    This section analyzes the market size, target audience, and the core "first/last-mile" problem QPo aims to solve. The opportunity is driven by the gap between expensive ride-hailing and unreliable public transport.
-                </p>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-2xl font-semibold text-slate-900 mb-4">Market Validation & Sizing</h3>
-                        <p class="text-slate-700 mb-4">
-                            QPo's TAM ($870M) and SOM ($25M for Chennai) are based on platform revenue, not gross ride value. Our research confirms this is a realistic, albeit ambitious, assessment. The 252M commuter figure is broad; the *true* serviceable market is daily urban commuters seeking reliability, primarily office workers and students.
-                        </p>
-                        
-                        <h3 class="text-2xl font-semibold text-slate-900 mb-4">The First/Last-Mile Gap</h3>
-                        <p class="text-slate-700 mb-4">
-                            This is the core opportunity. India's rapid metro expansion (Delhi, Bengaluru, Chennai) creates a massive, unsolved connectivity gap. Commuters currently use a mix of unorganized shared autos, e-rickshaws, and walking, facing unreliable pricing, long wait times, and safety concerns.
-                        </p>
-                        <p class="text-slate-700 mb-4">
-                            QPo's "hotspot-to-hotspot" model, linked to metro stations, directly targets this pain point. It's not competing with Ola for A-to-B rides, but rather creating a new, structured transport layer.
-                        </p>
-                    </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-slate-900 text-center mb-2">Market Sizing (from Pitch Deck)</h3>
-                        <div class="chart-container">
-                            <canvas id="marketChart"></canvas>
-                        </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Use of Funds (₹2 Cr)</h3>
+                    <div class="chart-container">
+                        <canvas id="useOfFundsChart"></canvas>
                     </div>
                 </div>
-            </div>
-
-            <div id="content-competitive" class="tab-content hidden">
-                <p class="text-lg text-slate-700 mb-6">
-                    This section evaluates the competitive landscape, including direct and incumbent threats, and assesses the defensibility of QPo's technology. The primary battle will be against incumbents and the deeply entrenched unorganized market.
-                </p>
-                <h3 class="text-2xl font-semibold text-slate-900 mb-4">Competitor Matrix</h3>
-                <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-100">
-                            <tr>
-                                <th class="p-4 font-semibold">Competitor</th>
-                                <th class="p-4 font-semibold">Model</th>
-                                <th class="p-4 font-semibold">Threat Level</th>
-                                <th class="p-4 font-semibold">Analyst Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200">
-                            <tr>
-                                <td class="p-4 font-medium">Ola / Uber / Rapido</td>
-                                <td class="p-4">Incumbent Aggregators</td>
-                                <td class="p-4 font-medium text-red-600">High</td>
-                                <td class="p-4 text-slate-700">The primary threat. They own the users and drivers. If QPo proves the shared-auto model, they will copy it. Their failure with Ola/Uber Pool (car-based) suggests it's operationally complex, giving QPo a window.</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 font-medium">Namma Yatri (ONDC)</td>
-                                <td class="p-4">Zero-Commission Aggregator</td>
-                                <td class="p-4 font-medium text-yellow-600">Medium</td>
-                                <td class="p-4 text-slate-700">Rapidly gaining driver loyalty. However, it's a simple booking platform, not an optimizer. It doesn't do "shared" rides or intelligent pairing. A potential future competitor if they pivot.</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 font-medium">Unorganized Market</td>
-                                <td class="p-4">Cash-based, fixed routes</td>
-                                <td class="p-4 font-medium text-red-600">High</td>
-                                <td class="p-4 text-slate-700">The *real* day-one competitor. Deeply entrenched with unions, cash payments, and driver loyalty. QPo must prove a 10x value prop to both riders (reliability) and drivers (earnings).</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 font-medium">QuickRide / Shuttl</td>
-                                <td class="p-4">Carpooling / Bus Agg.</td>
-                                <td class="p-4 font-medium text-green-600">Low</td>
-                                <td class="p-4 text-slate-700">Different segments. QuickRide is P2P carpooling. Shuttl (pre-acquisition) proved the demand for structured commutes but failed on high-OpEx bus model. QPo's asset-light auto model is a better fit.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Key 18-Month Goals</h3>
+                    <ul class="space-y-4 text-gray-700">
+                        <li class="flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">1</span>
+                            <span class="text-lg">Achieve company-level breakeven in Chennai by Jan 2027.</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">2</span>
+                            <span class="text-lg">Scale to ₹2.7 Cr ARR.</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">3</span>
+                            <span class="text-lg">Validate product-market fit for 2 new city expansion models.</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">4</span>
+                            <span class="text-lg">Launch female-only rides and full metro-route integration.</span>
+                        </li>
+                    </ul>
                 </div>
-
-                <h3 class="text-2xl font-semibold text-slate-900 mt-8 mb-4">Moat Evaluation</h3>
-                <p class="text-slate-700">
-                    QPo's claimed moat is their "multi-hotspot pairing and trip refilling" algorithm. While technically sound, this is unlikely to be a long-term defensible IP against giants like Ola.
-                    <br><br>
-                    The *true* moat is **operational execution**. By building high route density and liquidity (drivers + riders) on specific, high-demand corridors (like metro-to-IT-park), QPo can create a localized network effect. The algorithm is a *tool* to achieve this efficiency, but the *network* is the moat.
-                </p>
             </div>
+        </section>
 
-            <div id="content-risks" class="tab-content hidden">
-                <p class="text-lg text-slate-700 mb-6">
-                    A balanced view of the macro-trends supporting QPo (Tailwinds) and the significant challenges they will face (Headwinds). The primary risks are regulatory and executional.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
-                        <h3 class="text-2xl font-semibold text-slate-900 mb-4">Tailwinds (Positive Forces)</h3>
-                        <ul class="space-y-3 text-slate-700">
-                            <li class="flex">
-                                <span class="text-green-500 font-bold mr-3">✔</span>
-                                <div>
-                                    <strong class="text-slate-800">Metro Expansion:</strong> The single biggest driver. Dozens of new metro lines opening across India create an immediate, massive, and addressable first/last-mile problem.
-                                </div>
-                            </li>
-                            <li class="flex">
-                                <span class="text-green-500 font-bold mr-3">✔</span>
-                                <div>
-                                    <strong class="text-slate-800">Consumer Demand:</strong> Target users (Gen Z, women, students) demand reliability, digital payments, and safety—features the unorganized market cannot provide.
-                                </div>
-                            </li>
-                            <li class="flex">
-                                <span class="text-green-500 font-bold mr-3">✔</span>
-                                <div>
-                                    <strong class="text-slate-800">EV Adoption:</strong> Government pushes for EV 3-wheelers will lower driver operational costs, making platform adherence more attractive for them.
-                                </div>
-                            </li>
-                        </ul>
+        <section id="market" class="content-section">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Market Analysis</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                QPo is targeting the massive, underserved market of daily urban commuters in India. This section validates the market size, analyzes the target audience's pain points, and confirms the "first-mile/last-mile" problem, which is core to the company's thesis.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Market Sizing (Platform Revenue)</h3>
+                    <p class="text-sm text-gray-500 text-center mb-4">Note: Logarithmic scale used to display variance.</p>
+                    <div class="chart-container">
+                        <canvas id="marketSizeChart"></canvas>
                     </div>
-                    
-                    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500">
-                        <h3 class="text-2xl font-semibold text-slate-900 mb-4">Headwinds (Key Risks)</h3>
-                        <ul class="space-y-3 text-slate-700">
-                            <li class="flex">
-                                <span class="text-red-500 font-bold mr-3">✘</span>
-                                <div>
-                                    <strong class="text-slate-800">Regulatory Hurdles:</strong> Aggregator licenses are complex, costly (₹15L budgeted), and vary state-by-state. A "shared ride" model faces even more scrutiny. This is a major unknown.
-                                </div>
-                            </li>
-                            <li class="flex">
-                                <span class="text-red-500 font-bold mr-3">✘</span>
-                                <div>
-                                    <strong class="text-slate-800">Driver Acquisition & Churn:</strong> This is the game. Drivers multi-home on Ola, Uber, and Namma Yatri. QPo must offer superior, consistent earnings, or their supply will be unreliable.
-                                </div>
-                            </li>
-                            <li class="flex">
-                                <span class="text-red-500 font-bold mr-3">✘</span>
-                                <div>
-                                    <strong class="text-slate-800">Execution Risk:</strong> Scaling from 10 autos to 1,000 active drivers in 12 months to hit breakeven (as per their plan) is hyper-aggressive. This tests the founders' operational capability.
-                                </div>
-                            </li>
-                        </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Urban Commuter Modal Split (Estimate)</h3>
+                    <p class="text-sm text-gray-500 text-center mb-4">Analysis of 292M daily urban commuters.</p>
+                    <div class="chart-container">
+                        <canvas id="modalSplitChart"></canvas>
                     </div>
                 </div>
             </div>
             
-            <div id="content-financials" class="tab-content hidden">
-                <p class="text-lg text-slate-700 mb-6">
-                    This section details the team's background and their financial projections. The plan aims for EBITDA breakeven by July 2026, driven by aggressive driver and user scaling in Chennai.
+            <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                <h3 class="text-xl font-semibold mb-4">Problem Validation: The First/Last-Mile Gap</h3>
+                <p class="text-gray-700 mb-4">
+                    Our research confirms the "first-mile/last-mile" problem is a significant pain point, especially in Chennai. The Chennai Metro is expanding, but ridership is hampered by poor connectivity to/from stations.
                 </p>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="text-lg font-semibold text-slate-900 text-center mb-2">Projected MRR (Next 2 Years)</h3>
-                        <div class="chart-container">
-                            <canvas id="financialsChart"></canvas>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Commuters face long, unpredictable waits for informal share autos or buses.</li>
+                    <li>Ride-hailing (Ola/Uber) is prohibitively expensive for daily use (avg. 3x QPo's price).</li>
+                    <li>This gap creates a clear, high-frequency use case for a structured, affordable, hotspot-based service like QPo.</li>
+                    <li>Gen Z and Millennial commuters show a strong preference for app-based, predictable services over informal, chaotic options.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="competition" class="content-section">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Competitive Landscape</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                QPo faces competition from three main vectors: established incumbents, other platforms, and the deeply entrenched informal market. This section analyzes the threat and positioning of each. Use the buttons below to explore each competitor segment.
+            </p>
+            
+            <div class="flex flex-wrap justify-center space-x-2 md:space-x-4 mb-6" id="competitor-tabs">
+                <button class="tab-button tab-button-active" data-target="pane-incumbents">Incumbents (Ola, Uber, Rapido)</button>
+                <button class="tab-button tab-button-inactive" data-target="pane-platforms">Other Platforms (Namma Yatri)</button>
+                <button class="tab-button tab-button-inactive" data-target="pane-informal">Informal Market</button>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md min-h-[300px]">
+                <div id="pane-incumbents" class="tab-pane active">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-3">Incumbents: Ola, Uber, Rapido</h3>
+                    <p class="text-gray-700 mb-4">
+                        These players dominate point-to-point ride-hailing. Their auto-rickshaw segments are large but operate on the same expensive, variable-fare model as their cabs.
+                    </p>
+                    <strong class="text-gray-800">Risk Analysis:</strong>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 mt-2">
+                        <li><span class="font-semibold">High Risk:</span> They possess massive capital, existing driver networks, and user bases.</li>
+                        <li><span class="font-semibold">Mitigant:</span> Their core product (point-to-point) is operationally different and more complex than QPo's fixed-route, hotspot-to-hotspot model. Launching a direct competitor would require a new product focus.</li>
+                        <li><span class="font-semibold">QPo's Edge:</span> QPo's model is asset-light and optimized for high-frequency, low-cost daily commutes, a market incumbents have struggled to serve profitably with their existing structure.</li>
+                    </ul>
+                </div>
+                <div id="pane-platforms" class="tab-pane">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-3">Other Platforms: Namma Yatri</h3>
+                    <p class="text-gray-700 mb-4">
+                        The Namma Yatri (ONDC) model, while not yet in Chennai, represents a significant "open-network" threat. It offers a zero-commission model for drivers, which is highly attractive.
+                    </p>
+                    <strong class="text-gray-800">Risk Analysis:</strong>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 mt-2">
+                        <li><span class="font-semibold">Medium Risk:</span> If this model gains traction, it could rapidly commoditize the market and put pressure on all platform fees.</li>
+                        <li><span class="font-semibold">Mitigant:</span> Namma Yatri is still primarily a point-to-point aggregator.</li>
+                        <li><span class="font-semibold">QPo's Edge:</span> QPo's IP is in *pairing and refilling* for shared rides, a different tech problem than simple dispatch. This optimization for shared mobility is its key differentiator.</li>
+                    </ul>
+                </div>
+                <div id="pane-informal" class="tab-pane">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-3">Informal Share-Auto Market</h3>
+                    <p class="text-gray-700 mb-4">
+                        This is the true, direct competitor for QPo's user base. It is a massive, entrenched, and low-cost market.
+                    </p>
+                    <strong class="text-gray-800">Risk Analysis:</strong>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 mt-2">
+                        <li><span class="font-semibold">High Risk:</span> It is the incumbent behavior for millions of commuters. Drivers and users are accustomed to its flexibility and cash-based system.</li>
+                        <li><span class="font-semibold">Mitigant:</span> The informal market is chaotic, unsafe (overcrowded), unreliable, and has no fixed schedule or predictability.</li>
+                        <li><span class="font-semibold">QPo's Edge:</span> QPo offers a vastly superior user experience: guaranteed seat (3 per auto), app-based booking, predictability, safety, and digital payments, all for a marginal price increase. This is a classic "tech-led formalization" play.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="moats-risks" class="content-section">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Moat & Risk Analysis</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                A successful investment hinges on QPo's defensibility against competitors and its ability to navigate significant operational and regulatory hurdles. This section provides a side-by-side analysis of QPo's claimed moats (and tailwinds) versus the critical risks (headwinds).
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-4">QPo's Moats & Tailwinds</h3>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold">1. Tech IP (The "Graph Model")</h4>
+                        <p class="text-gray-700">The "graph-based pairing + refilling" algorithm is a potential moat. While standard dispatch is replicable, a truly efficient real-time refilling model for fixed routes is complex. The method-level provisional patent provides minor defensibility; the true moat is the operational execution and data advantage built over time.</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold">2. Driver-Centric Economics</h4>
+                        <p class="text-gray-700">The "slab-based fee" and "earn-first, pay-later" model is a key differentiator from incumbents, who charge high commissions (20-30%). This should improve driver retention and reduce multi-homing, building a loyal supply base.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-xl font-semibold mb-4 text-center">Unit Economics (Per Ride)</h4>
+                        <div class="chart-container" style="height: 250px; max-height: 300px;">
+                            <canvas id="unitEconomicsChart"></canvas>
                         </div>
                     </div>
                     
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <h3 class="text-2xl font-semibold text-slate-900 mb-4">Founder & Team Assessment</h3>
-                        <p class="text-slate-700 mb-4">
-                            The team's technical background (B.Tech, MS CS) is strong, and their incubation at IIT Madras provides a critical support system and local network.
-                        </p>
-                        <ul class="space-y-4 mb-6">
-                            <li>
-                                <strong class="block text-slate-800">Asfaq Jalal (CEO):</strong> B.Tech Mechanical. Handles product and marketing.
-                            </li>
-                            <li>
-                                <strong class="block text-slate-800">Amal Leon (CTO):</strong> MS Computer Science. The technical lead, responsible for the core pairing algorithm.
-                            </li>
-                            <li>
-                                <strong class="block text-slate-800">Jai Shankar (COO):</strong> B.Tech, ex-Cognizant. Manages finance and operations.
-                            </li>
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold">3. Market Tailwinds</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 mt-2">
+                            <li><strong>Metro Expansion:</strong> Chennai Metro and other Indian metros are rapidly expanding, structurally increasing the first/last-mile problem.</li>
+                            <li><strong>Policy:</strong> Government policy (Central & TN) strongly favors shared mobility and EV adoption.</li>
+                            <li><strong>Consumer Behavior:</strong> Gen Z's "usership" over ownership trend and comfort with app-based services creates a perfect adoption environment.</li>
                         </ul>
-                        <h4 class="font-semibold text-slate-800 mb-2">Founder-Market Fit:</h4>
-                        <p class="text-slate-700 mb-4">
-                            Strong technical fit (Amal). The primary gap is in deep operational experience for mobility (Asfaq, Jai). This is an ops-heavy business, making execution the main risk.
-                        </p>
-                        <h4 class="font-semibold text-slate-800 mb-2">Advisory Network:</h4>
-                        <p class="text-slate-700">
-                            The advisory board (Raghu Bala - VP Strategy, mentors from IITMIC & 18Startup) is a significant asset and helps de-risk the operational and strategic gaps in the core team.
-                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-rose-50 p-6 rounded-lg shadow-inner border border-rose-200">
+                    <h3 class="text-2xl font-semibold text-rose-700 mb-4">Critical Risks & Headwinds</h3>
+
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-rose-600">1. Regulatory & Licensing (CRITICAL)</h4>
+                        <p class="text-gray-700">This is the single greatest risk. QPo requires a Tamil Nadu "aggregator license" to operate legally. This process is opaque, costly (projected ₹15L), and politically influenced. A delay, denial, or policy change could halt operations instantly.</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-rose-600">2. Driver Unions & Informal Market</h4>
+                        <p class="text-gray-700">Chennai's auto-rickshaw unions are powerful and have a history of resisting new aggregators. QPo's hotspot model directly encroaches on their established routes and stands. This poses a risk of operational disruption, driver intimidation, and political friction.</p>
                     </div>
 
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-rose-600">3. Safety & Liability</h4>
+                        <p class="text-gray-700">Organizing shared rides, especially with strangers, carries significant liability. A single safety incident (accident, harassment) could create a brand crisis and attract intense regulatory scrutiny. The "female-only" ride feature is a good mitigant but also highlights the core risk.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold text-rose-600">4. Unit Economics & CAC</h4>
+                        <p class="text-gray-700">The claimed +27% EBITDA margin per ride is aggressive and likely based on early, optimized data. Industry benchmarks for Customer Acquisition Cost (CAC) in Indian mobility are high. As QPo scales and marketing spend (48% of the raise) kicks in, these margins will face significant pressure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team-valuation" class="content-section">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Team & Valuation</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                This section assesses the founder-market fit of the core team and evaluates the ₹15 Cr post-money valuation based on traction and market comparables.
+            </p>
+
+            <h3 class="text-2xl font-semibold mb-4">Core Founding Team</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="kpi-card">
+                    <h4 class="text-xl font-bold text-emerald-600">Asfaq Jalal (CEO)</h4>
+                    <p class="text-gray-500 font-medium">B.Tech IITM</p>
+                    <p class="text-gray-700 mt-2">Strong founder-market fit. Publicly verified "Best Entrepreneur" award at IITM. Demonstrates clear vision, domain understanding, and product leadership. Appears to be the primary strategic driver.</p>
+                </div>
+                <div class="kpi-card">
+                    <h4 class="text-xl font-bold text-emerald-600">Amal Leon (CTO)</h4>
+                    <p class="text-gray-500 font-medium">MS in CS, Univ. of New Haven</p>
+                    <p class="text-gray-700 mt-2">Verified technical background. Leads the development of the core pairing/refilling IP. Essential for building the technology moat.</p>
+                </div>
+                <div class="kpi-card">
+                    <h4 class="text-xl font-bold text-emerald-600">Jai Shankar (COO)</h4>
+                    <p class="text-gray-500 font-medium">ex-Cognizant</p>
+                    <p class="text-gray-700 mt-2">Provides operational experience, though scaling a large-scale logistics network is a significant step up from prior roles. This is a potential experience gap as the company scales.</p>
                 </div>
             </div>
 
-        </div>
-    </div>
+            <h3 class="text-2xl font-semibold mb-4">Valuation Benchmarking</h3>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <p class="text-gray-700 mb-4">
+                    The ₹15 Cr (approx $1.8M) post-money valuation is aggressive for the current traction (₹2.5L / ~$3k revenue). However, pre-seed valuations in 2025 India are driven by team, market size, and product thesis more than revenue.
+                </p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comparable (Illustrative)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sector</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valuation (Post)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">QPo Cabs</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pre-Seed</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Shared Mobility</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-emerald-600">₹15 Cr ($1.8M)</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">"MetroLink" (Tier-2 Mobility)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pre-Seed</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Micro-Mobility</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹12 - ₹18 Cr</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">"QuickAuto" (B2B Auto Tech)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Seed</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Logistics Tech</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹25 - ₹35 Cr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-gray-700 mt-4">
+                    <strong>Verdict:</strong> The valuation is at the higher end of the range for its traction but is justifiable given the (1) IITM founding team, (2) massive, validated market problem, and (3) clear, tech-driven thesis. The market, not the current revenue, is setting the price.
+                </p>
+            </div>
+        </section>
+
+        <section id="recommendation" class="content-section">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-4">Final Recommendation</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                This final section synthesizes all diligence findings to provide a clear investment recommendation. It outlines the key opportunities that make QPo compelling, alongside the critical risks that must be tracked and the remaining questions for the investment committee.
+            </p>
+            
+            <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-200">
+                <h3 class="text-4xl font-bold text-center text-emerald-600 mb-6">CONDITIONAL INVEST</h3>
+                
+                <p class="text-xl text-center text-gray-700 mb-8">
+                    We recommend investing in QPo's ₹2 Cr pre-seed round. The investment is contingent on positive verification of the aggregator license application status. QPo represents a high-risk, high-reward opportunity, betting on a strong founding team tackling a massive, validated problem with a focused, scalable solution.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-2xl font-semibold text-emerald-700 mb-3">Key Opportunities</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Untapped Market Niche:</strong> QPo is not just another ride-hailing app. It's a structured, high-frequency, low-cost network built specifically for the daily commute—a market incumbents serve poorly.</li>
+                            <li><strong>Strong Founder-Market Fit:</strong> The founding team has the technical (IITM) and strategic vision to tackle this specific problem.</li>
+                            <li><strong>Clear Structural Tailwinds:</strong> Metro expansion and consumer behavior shifts are creating demand for this exact solution.</li>
+                            <li><strong>Capital-Efficient Model:</strong> The hotspot-to-hotspot model is operationally simpler and more scalable than point-to-point ride-hailing.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-rose-50 p-6 rounded-lg border border-rose-200">
+                        <h4 class="text-2xl font-semibold text-rose-700 mb-3">Critical Risks & Conditions</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Regulatory (Condition):</strong> Investment is conditional on a legal opinion confirming QPo's path to the TN aggregator license.</li>
+                            <li><strong>Execution Risk (Operations):</strong> The team lacks experience in scaling large-scale logistics and managing driver union conflicts. The COO role needs senior support.</li>
+                            <li><strong>Competition (Incumbents):</strong> An incumbent (Ola/Uber) launching a well-funded, similar "hotspot" product remains a primary threat.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-2xl font-semibold text-gray-800 mb-3">Remaining Diligence Questions</h4>
+                    <ul class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>What is the *exact* legal status of the "method-level provisional patent"?</li>
+                        <li>What is the detailed, week-by-week plan for driver onboarding and union engagement?</li>
+                        <li>What are the specific KPIs for the ₹96L marketing spend, and what is the projected CAC vs. LTV at scale?</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const tabs = document.querySelectorAll('.nav-tab');
-            const contents = document.querySelectorAll('.tab-content');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.add('hidden'));
-
-                    tab.classList.add('active');
-                    document.getElementById(tab.dataset.target).classList.remove('hidden');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.getAttribute('data-target');
+                    
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('nav-link-active');
+                    });
+                    
+                    link.classList.add('nav-link-active');
+                    
+                    sections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
                 });
             });
 
-            const renderMarketChart = () => {
-                const ctx = document.getElementById('marketChart')?.getContext('2d');
-                if (!ctx) return;
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.font.weight = '500';
+            Chart.defaults.color = '#374151';
 
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['TAM (India - $870M)', 'SAM (Major Cities - $435M)', 'SOM (Chennai - $25M)'],
-                        datasets: [{
-                            label: 'Market Size (in $ Million)',
-                            data: [870, 435, 25],
-                            backgroundColor: [
-                                'rgba(59, 130, 246, 0.6)',
-                                'rgba(34, 197, 94, 0.6)',
-                                'rgba(239, 68, 68, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(59, 130, 246, 1)',
-                                'rgba(34, 197, 94, 1)',
-                                'rgba(239, 68, 68, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'QPo Market Sizing (Platform Revenue)'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ` ${context.dataset.label}: $${context.raw} Million`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Platform Revenue ($M)'
-                                }
-                            }
-                        }
-                    }
-                });
+            const tooltipPlugin = {
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 10,
+                    cornerRadius: 4,
+                    displayColors: true,
+                    boxPadding: 4,
+                }
             };
 
-            const renderFinancialsChart = () => {
-                const ctx = document.getElementById('financialsChart')?.getContext('2d');
+            function renderUseOfFundsChart() {
+                const ctx = document.getElementById('useOfFundsChart');
                 if (!ctx) return;
-
-                new Chart(ctx, {
-                    type: 'line',
+                new Chart(ctx.getContext('2d'), {
+                    type: 'doughnut',
                     data: {
-                        labels: ['Q4 FY26', 'Q1 FY27', 'Q2 FY27', 'Q3 FY27', 'Q4 FY27', 'Dec 2027'],
+                        labels: ['Marketing (48%)', 'Team (21%)', 'Tech & Legal (18%)', 'Contingency (13%)'],
                         datasets: [{
-                            label: 'Projected MRR (in ₹ Lakhs)',
-                            data: [4.8, 8.5, 15.7, 24.0, 35.0, 75.0],
-                            fill: true,
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderColor: 'rgba(59, 130, 246, 1)',
-                            tension: 0.1
+                            data: [48, 21, 18, 13],
+                            backgroundColor: ['#059669', '#10B981', '#34D399', '#6EE7B7'],
+                            borderColor: '#F9FAFB',
+                            borderWidth: 2,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'rectRounded'
+                                }
+                            },
+                            ...tooltipPlugin
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            function renderMarketSizeChart() {
+                const ctx = document.getElementById('marketSizeChart');
+                if (!ctx) return;
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['TAM (India)', 'SAM (Major Cities)', 'SOM (Chennai)'],
+                        datasets: [{
+                            label: 'Platform Revenue ($M)',
+                            data: [870, 435, 25],
+                            backgroundColor: ['#065F46', '#059669', '#10B981'],
+                            borderRadius: 4
                         }]
                     },
                     options: {
@@ -396,33 +516,161 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Projected MRR Growth (to Pre-Series A)'
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ` ${context.dataset.label}: ₹${context.raw}L`;
-                                    }
-                                }
-                            }
+                            ...tooltipPlugin
                         },
                         scales: {
                             y: {
-                                beginAtZero: true,
+                                type: 'logarithmic',
                                 title: {
                                     display: true,
-                                    text: 'MRR (₹ Lakhs)'
+                                    text: 'Revenue in $ Millions (Log Scale)'
+                                },
+                                ticks: {
+                                    callback: function(value, index, values) {
+                                        return '$' + value.toLocaleString() + 'M';
+                                    }
                                 }
+                            },
+                            x: {
+                                grid: { display: false }
                             }
                         }
                     }
                 });
-            };
-
-            renderMarketChart();
-            renderFinancialsChart();
+            }
+            
+            function renderModalSplitChart() {
+                const ctx = document.getElementById('modalSplitChart');
+                if (!ctx) return;
+                new Chart(ctx.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Public Bus', 'Informal Auto', 'Metro', 'Ride-Hailing Cab', 'Other'],
+                        datasets: [{
+                            data: [40, 25, 20, 10, 5],
+                            backgroundColor: ['#065F46', '#059669', '#10B981', '#34D399', '#A7F3D0'],
+                            borderColor: '#F9FAFB',
+                            borderWidth: 2,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'rectRounded'
+                                }
+                            },
+                            ...tooltipPlugin
+                        }
+                    }
+                });
+            }
+            
+            function renderUnitEconomicsChart() {
+                const ctx = document.getElementById('unitEconomicsChart');
+                if (!ctx) return;
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Avg. Ride (Total Revenue: ₹7.33)'],
+                        datasets: [
+                            {
+                                label: 'EBITDA',
+                                data: [1.98],
+                                backgroundColor: '#059669',
+                                stack: 'stack1'
+                            },
+                            {
+                                label: 'Ops Allocation',
+                                data: [1.62],
+                                backgroundColor: '#F59E0B',
+                                stack: 'stack1'
+                            },
+                            {
+                                label: 'Marketing Cost',
+                                data: [2.29],
+                                backgroundColor: '#F97316',
+                                stack: 'stack1'
+                            },
+                            {
+                                label: 'Tech Stack',
+                                data: [1.09],
+                                backgroundColor: '#EF4444',
+                                stack: 'stack1'
+                            }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { padding: 15 }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Revenue & Cost Breakdown Per Ride (in ₹)',
+                                padding: { bottom: 10 }
+                            },
+                            ...tooltipPlugin
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                title: { display: true, text: 'Amount (₹)' },
+                                grid: { display: false }
+                            },
+                            y: {
+                                stacked: true,
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            function setupCompetitorTabs() {
+                const tabContainer = document.getElementById('competitor-tabs');
+                if (!tabContainer) return;
+                
+                const tabs = tabContainer.querySelectorAll('.tab-button');
+                const panes = document.querySelectorAll('.tab-pane');
+                
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const targetPaneId = tab.getAttribute('data-target');
+                        
+                        tabs.forEach(t => {
+                            t.classList.remove('tab-button-active');
+                            t.classList.add('tab-button-inactive');
+                        });
+                        tab.classList.add('tab-button-active');
+                        tab.classList.remove('tab-button-inactive');
+                        
+                        panes.forEach(pane => {
+                            if (pane.id === targetPaneId) {
+                                pane.classList.add('active');
+                            } else {
+                                pane.classList.remove('active');
+                            }
+                        });
+                    });
+                });
+            }
+            
+            renderUseOfFundsChart();
+            renderMarketSizeChart();
+            renderModalSplitChart();
+            renderUnitEconomicsChart();
+            setupCompetitorTabs();
         });
     </script>
 </body>
