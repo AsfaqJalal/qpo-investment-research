@@ -3,224 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QPo Investment Infographic</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Chosen Palette: Energetic & Playful (#00A8E8, #006280, #FF8811, #F34213, #00B345) -->
-    <!-- Application Structure Plan: A single, scrollable narrative (infographic style) was chosen. This tells a linear story, ideal for a VC analyst quickly grasping the full picture. The flow is: Problem -> Solution -> Opportunity (Market) -> Proof (Traction) -> The Deal (Ask/Use of Funds) -> The Plan (Projections) -> The Landscape (Risks/Competitors). This logical progression guides the user from the "why" to the "what," "how big," and "what's next," which is a highly effective way to consume a pitch. -->
-    <!-- Visualization & Content Choices: 
-        1. Commuter Problem -> Goal: Inform -> Viz: "Big Number" HTML/Tailwind -> Justification: High-impact intro to establish the pain point. -> Method: HTML/Tailwind.
-        2. QPo Solution -> Goal: Organize (Process) -> Viz: HTML/CSS Flow Chart -> Justification: Simply explains the "hotspot" model without complex diagrams. -> Method: HTML/Tailwind (flexbox, borders).
-        3. Market Size -> Goal: Compare -> Viz: Bar Chart -> Justification: Clear comparison of TAM/SAM/SOM. -> Library: Chart.js (Canvas).
-        4. Target Audience -> Goal: Compare -> Viz: Bar Chart -> Justification: Shows scale of target segments. (Includes label wrapping). -> Library: Chart.js (Canvas).
-        5. Traction -> Goal: Inform (KPIs) -> Viz: "Big Number" Icon List -> Justification: Quick, scannable proof points. -> Method: HTML/Tailwind (unicode).
-        6. Use of Funds -> Goal: Compare (Composition) -> Viz: Donut Chart -> Justification: Standard for % allocation. -> Library: Chart.js (Canvas).
-        7. MRR Projections -> Goal: Change (Time) -> Viz: Line Chart -> Justification: Best way to show growth trend. -> Library: Chart.js (Canvas).
-        8. Landscape (Risks/Tailwinds/Competitors) -> Goal: Organize (Grouping) -> Viz: Multi-column List -> Justification: Scannable pro/con/competitor view. -> Method: HTML/Tailwind.
+    <title>QPo Cabs: Investment Infographic</title>
+    <!-- Chosen Palette: Energetic & Playful (#F94144, #F3722C, #F9C74F, #90BE6D, #43AA8B) -->
+    <!-- Application Structure Plan: A single-page, scrolling narrative infographic. The flow guides an investor from the high-level problem (Market Chaos) to the specific solution (QPo's model), then dives into the business details (Market Size, Unit Economics, Use of Funds), strategic positioning (Competition, Risks/Tailwinds), and finally the team. This logical, top-down structure is ideal for presenting a venture investment thesis. -->
+    <!-- Visualization & Content Choices:
+        - Big Numbers (Commuters, Ask, Traction): Goal(Inform). Viz(HTML/Tailwind KPI Cards). Justification(Fast, high-impact data). Method(HTML/CSS).
+        - Market Size (TAM/SAM/SOM): Goal(Compare). Viz(Bar Chart). Justification(Clearly shows scale comparison). Library(Chart.js, Canvas).
+        - Use of Funds: Goal(Inform-Composition). Viz(Doughnut Chart). Justification(Standard for budget breakdown). Library(Chart.js, Canvas).
+        - Unit Economics: Goal(Compare-Composition). Viz(Horizontal Stacked Bar). Justification(Visually dissects revenue per ride). Library(Chart.js, Canvas).
+        - Competition: Goal(Organize/Compare). Viz(3-Column HTML/CSS Diagram). Justification(Clearly positions QPo's niche). Method(HTML/CSS).
+        - Tailwinds/Risks: Goal(Organize). Viz(2-Column HTML/CSS List). Justification(Simple SWOT-style summary). Method(HTML/CSS).
+        - Team: Goal(Inform). Viz(HTML/CSS Cards). Justification(Clean bio presentation). Method(HTML/CSS).
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+        }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px; 
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
-            height: 320px; 
+            height: 300px;
             max-height: 350px;
         }
         @media (min-width: 768px) {
             .chart-container {
                 height: 350px;
+                max-height: 400px;
             }
+        }
+        .kpi-card {
+            @apply bg-white p-6 rounded-lg shadow-md border border-gray-100;
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans" style="color: #006280;">
+<body class="text-gray-900">
 
-    <div class="container mx-auto max-w-5xl p-6 md:p-12">
+    <div class="max-w-5xl mx-auto p-4 md:p-8">
 
         <header class="text-center mb-12">
-            <h1 class="text-5xl font-bold" style="color: #006280;">QPo: The Future of Urban Commute</h1>
-            <p class="text-xl mt-4" style="color: #00A8E8;">An Infographic on the Investment Opportunity (Oct 2025)</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: #43AA8B;">QPo Cabs</h1>
+            <p class="text-xl md:text-2xl font-medium text-gray-700">Affordable, Structured, & Safe Shared Mobility for India's Daily Commuters</p>
         </header>
 
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Problem: A Broken Daily Commute</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                Over 250 million Indians commute daily, facing a frustrating choice: overcrowded, unreliable public transport or expensive, inefficient ride-hailing. This creates a massive, unsolved gap, especially for first/last-mile connectivity to metro networks.
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The Daily Commute is Broken for 292 Million Indians</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                Millions of students and professionals are trapped between two bad options: chaotic, unreliable, and unsafe public transport or expensive, point-to-point ride-hailing (like Ola/Uber) that is unsustainable for daily use. QPo fixes this.
             </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #F34213;">250M+</div>
-                    <div class="text-lg mt-2 font-semibold">Daily Urban Commuters</div>
+            <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                <h3 class="text-2xl font-semibold mb-2">QPo's Solution: The "Hotspot-to-Hotspot" Network</h3>
+                <p class="text-gray-700 text-lg">
+                    We provide an app-based shared auto-rickshaw service on fixed routes, guaranteeing only 3 people per auto. This makes the ride <strong>3x cheaper than a cab</strong>, faster than a bus, and far more predictable and safer than an informal share auto.
+                </p>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The Pre-Seed Opportunity & Traction</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                We are raising a ₹2 Cr pre-seed round to scale our operations in Chennai and validate expansion models. Our bootstrapped-first approach has already demonstrated clear market demand.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="kpi-card text-center">
+                    <div class="text-4xl font-extrabold" style="color: #F3722C;">₹2 Cr</div>
+                    <div class="text-lg font-semibold text-gray-700 mt-2">The Ask</div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #F34213;">3x More Costly</div>
-                    <div class="text-lg mt-2 font-semibold">Ride-Hailing (Ola/Uber)</div>
+                <div class="kpi-card text-center">
+                    <div class="text-4xl font-extrabold" style="color: #F3722C;">₹15 Cr</div>
+                    <div class="text-lg font-semibold text-gray-700 mt-2">Post-Money Valuation</div>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #F34213;">Unreliable</div>
-                    <div class="text-lg mt-2 font-semibold">Buses & Unorganized Autos</div>
+                <div class="kpi-card text-center">
+                    <div class="text-4xl font-extrabold" style="color: #43AA8B;">₹2.5L+</div>
+                    <div class="text-lg font-semibold text-gray-700 mt-2">Revenue Generated</div>
+                </div>
+                <div class="kpi-card text-center">
+                    <div class="text-4xl font-extrabold" style="color: #43AA8B;">2,000+</div>
+                    <div class="text-lg font-semibold text-gray-700 mt-2">Trips Completed</div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Solution: The Hotspot-to-Hotspot Network</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                QPo is an app-based shared auto network. Our proprietary algorithm creates high-density "hotspot" routes (like metro stations to IT parks) and fills trips with 3 riders, making it faster, safer, and 70% cheaper than cabs.
-            </p>
-            <div class="flex flex-col md:flex-row justify-around items-center text-center">
-                <div class="flex flex-col items-center">
-                    <div class="bg-white p-6 rounded-lg shadow-md w-48 h-24 flex items-center justify-center font-semibold text-lg">1. Select Hotspot</div>
-                    <div class="text-5xl font-light" style="color: #00A8E8;">▼</div>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="bg-white p-6 rounded-lg shadow-md w-48 h-24 flex items-center justify-center font-semibold text-lg">2. Algorithm Pairs 3 Riders</div>
-                    <div class="text-5xl font-light" style="color: #00A8E8;">▼</div>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="bg-white p-6 rounded-lg shadow-md w-48 h-24 flex items-center justify-center font-semibold text-lg">3. Metro-Linked Pickup</div>
-                    <div class="text-5xl font-light" style="color: #00A8E8;">▼</div>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="bg-white p-6 rounded-lg shadow-md w-48 h-24 flex items-center justify-center font-semibold text-lg">4. Shared Ride to Hotspot</div>
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">A Massive, Untapped Market</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-center mb-4">Addressable Market (Annual Platform Revenue)</h3>
+                <p class="text-gray-600 text-center mb-4">
+                    Our analysis confirms a massive market, with a Serviceable Obtainable Market (SOM) of $25M in Chennai alone, derived from a Total Addressable Market (TAM) of $870M in platform revenue.
+                </p>
+                <div class="chart-container" style="max-width: 600px; height: 300px;">
+                    <canvas id="marketSizeChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Opportunity: A Massive Addressable Market</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                The total market for organized shared mobility is vast. QPo is targeting a $25M serviceable market in Chennai alone, focusing on daily commuters who are desperate for a reliable middle-ground solution.
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">The Business Model: Scalable & Profitable</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                Our model is built for high-frequency, profitable growth. We have a dual-sided revenue stream and a clear plan to deploy capital efficiently over an 18-month runway.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-center mb-4">Market Size (Platform Revenue)</h3>
-                    <div class="chart-container">
-                        <canvas id="marketChart"></canvas>
+                    <h3 class="text-xl font-semibold text-center mb-4">Use of Funds (₹2 Cr Raise)</h3>
+                    <p class="text-gray-600 text-center mb-4">
+                        Funds are allocated primarily for growth and team expansion to achieve breakeven in Chennai by Jan 2027.
+                    </p>
+                    <div class="chart-container" style="height: 300px; max-height: 350px;">
+                        <canvas id="useOfFundsChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-center mb-4">Target Audience (India)</h3>
-                    <div class="chart-container">
-                        <canvas id="audienceChart"></canvas>
+                    <h3 class="text-xl font-semibold text-center mb-4">Unit Economics (Per Ride)</h3>
+                    <p class="text-gray-600 text-center mb-4">
+                        Our model is already demonstrating a positive <strong>+27% EBITDA margin per ride</strong>, driven by our tech-optimized, low-overhead model.
+                    </p>
+                    <div class="chart-container" style="height: 300px; max-height: 350px;">
+                        <canvas id="unitEconomicsChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Proof: Early Traction (Bootstrapped)</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                Since our revenue launch in February 2025, we have validated the model and proven strong initial demand with zero marketing spend, primarily through our incubation at IIT Madras.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #00B345;">👤 5,000+</div>
-                    <div class="text-lg mt-2 font-semibold">Customers Served</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #00B345;">🚗 2,000+</div>
-                    <div class="text-lg mt-2 font-semibold">Trips Completed</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-5xl font-bold" style="color: #00B345;">₹ 2.5L+</div>
-                    <div class="text-lg mt-2 font-semibold">Total Revenue</div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Deal: ₹2 Cr to Scale</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                We are raising a ₹2 Cr seed round at a ₹15 Cr post-money valuation. The funds will be primarily used to scale our driver network, acquire users, and enhance our technology.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center h-full flex flex-col justify-center">
-                    <div class="text-6xl font-bold" style="color: #006280;">₹2 Cr</div>
-                    <div class="text-2xl mt-2 font-semibold">Seed Round Ask</div>
-                    <div class="text-lg mt-1" style="color: #00A8E8;">at ₹15 Cr Post-Money Valuation</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-center mb-4">Use of Funds</h3>
-                    <div class="chart-container" style="height: 350px;">
-                        <canvas id="fundsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Plan: Path to Profitability</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                Our financial plan focuses on achieving high route density in Chennai to hit EBITDA breakeven by July 2026. This sets the stage for a Pre-Series A raise and multi-city expansion.
-            </p>
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-semibold text-center mb-4">Projected MRR Growth (₹ Lakhs)</h3>
-                <div class="chart-container" style="max-width: 900px; height: 350px;">
-                    <canvas id="projectionChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-12">
-            <h2 class="text-3xl font-semibold text-center mb-6">The Landscape: Risks & Advantages</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                The opportunity is supported by strong macro tailwinds. However, we face significant executional risks and threats from incumbents and the unorganized market.
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">QPo's Strategic Niche</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                QPo is not another "me-too" ride-hailing app. We are creating a new category, precision-built for the daily commuter, positioning us perfectly between the two flawed extremes.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4" style="border-color: #00B345;">
-                    <h3 class="text-2xl font-semibold mb-4" style="color: #00B345;">✔ Tailwinds</h3>
-                    <ul class="list-disc list-outside pl-5 space-y-2 text-gray-700">
-                        <li><strong>Metro Expansion:</strong> Creates a massive, immediate first/last-mile gap.</li>
-                        <li><strong>User Demand:</strong> Target users (Gen Z, women) demand reliability, safety, and digital payments.</li>
-                        <li><strong>EV Adoption:</strong> Lowers driver opex, making platforms more attractive.</li>
+                <div class="kpi-card">
+                    <h3 class="text-xl font-bold text-center mb-4" style="color: #F94144;">Incumbents (Ola/Uber)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Model:</strong> Point-to-Point</li>
+                        <li><strong>Cost:</strong> Very High</li>
+                        <li><strong>Predictability:</strong> High</li>
+                        <li><strong>Niche:</strong> Premium / On-Demand</li>
+                        <li><strong>Commuter Fit:</strong> Poor (Too expensive)</li>
                     </ul>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4" style="border-color: #F34213;">
-                    <h3 class="text-2xl font-semibold mb-4" style="color: #F34213;">✘ Headwinds</h3>
-                    <ul class="list-disc list-outside pl-5 space-y-2 text-gray-700">
-                        <li><strong>Regulation:</strong> Aggregator licenses are complex, costly, and vary by state.</li>
-                        <li><strong>Driver Churn:</strong> Intense competition from Ola/Uber/Namma Yatri for drivers.</li>
-                        <li><strong>Execution Risk:</strong> Scaling from 10 to 1,000 drivers in 12 months is hyper-aggressive.</li>
+                <div class="kpi-card border-4" style="border-color: #43AA8B;">
+                    <h3 class="text-xl font-bold text-center mb-4" style="color: #43AA8B;">QPo Cabs (The Niche)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Model:</strong> Hotspot-to-Hotspot</li>
+                        <li><strong>Cost:</strong> Low & Fixed</li>
+                        <li><strong>Predictability:</strong> Very High</li>
+                        <li><strong>Niche:</strong> Daily Commute</li>
+                        <li><strong>Commuter Fit:</strong> Perfect</li>
                     </ul>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4" style="border-color: #FF8811;">
-                    <h3 class="text-2xl font-semibold mb-4" style="color: #FF8811;">● Competitors</h3>
-                    <ul class="list-disc list-outside pl-5 space-y-2 text-gray-700">
-                        <li><strong>Ola / Uber:</strong> High threat. Can copy the model and subsidize heavily.</li>
-                        <li><strong>Namma Yatri:</strong> Medium threat. Gaining driver loyalty but lacks sharing tech.</li>
-                        <li><strong>Unorganized Market:</strong> High threat. Deeply entrenched with unions and cash.</li>
+                <div class="kpi-card">
+                    <h3 class="text-xl font-bold text-center mb-4" style="color: #F3722C;">Informal Market</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Model:</strong> Loose Routes</li>
+                        <li><strong>Cost:</strong> Very Low</li>
+                        <li><strong>Predictability:</strong> Very Low</li>
+                        <li><strong>Niche:</strong> Mass Market Chaos</li>
+                        <li><strong>Commuter Fit:</strong> Poor (Unsafe, unreliable)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Strategic Landscape: Tailwinds & Risks</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center mb-8">
+                We are building in a market with strong tailwinds but are clear-eyed about the critical risks that require careful management.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                    <h3 class="text-2xl font-semibold text-center text-green-700 mb-4">▲ Key Tailwinds</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold text-xl mr-3">✔</span>
+                            <span class="text-gray-700"><strong>Metro Expansion:</strong> Rapid growth of metro networks structurally increases the first-mile/last-mile problem.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold text-xl mr-3">✔</span>
+                            <span class="text-gray-700"><strong>Gen Z Behavior:</strong> A shift from asset "ownership" to "usership" and a demand for digital, predictable services.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 font-bold text-xl mr-3">✔</span>
+                            <span class="text-gray-700"><strong>Policy:</strong> Government policies strongly encourage shared mobility and EV adoption to reduce congestion and pollution.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500">
+                    <h3 class="text-2xl font-semibold text-center text-red-700 mb-4">▼ Critical Risks</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-red-600 font-bold text-xl mr-3">!</span>
+                            <span class="text-gray-700"><strong>Regulatory & Licensing:</strong> Securing the Tamil Nadu "aggregator license" is a complex, critical, and costly hurdle.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-600 font-bold text-xl mr-3">!</span>
+                            <span class="text-gray-700"><strong>Driver Unions:</strong> Auto unions in Chennai are powerful and can create operational friction or disruption.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-600 font-bold text-xl mr-3">!</span>
+                            <span class="text-gray-700"><strong>Safety & Liability:</strong> A single safety incident in a shared ride is a significant brand and legal risk.</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2 class="text-3xl font-semibold text-center mb-6">The Team: Built at IIT Madras</h2>
-            <p class="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-700">
-                We are a technical founding team with the product, ops, and tech skills to build this, backed by a strong advisory network and the IITM Incubation Cell.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h4 class="text-xl font-bold">Asfaq Jalal</h4>
-                    <p class="text-lg" style="color: #00A8E8;">CEO (Product & Ops)</p>
+            <h2 class="text-3xl font-bold text-center mb-8">The Founding Team</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="kpi-card text-center">
+                    <h3 class="text-xl font-bold" style="color: #43AA8B;">Asfaq Jalal (CEO)</h3>
+                    <p class="font-medium text-gray-600">B.Tech IIT Madras</p>
+                    <p class="text-sm text-gray-500 mt-2">Awarded "Best Entrepreneur" at IITM. The strategic and product visionary.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h4 class="text-xl font-bold">Amal Leon</h4>
-                    <p class="text-lg" style="color: #00A8E8;">CTO (Tech & Algorithm)</p>
+                <div class="kpi-card text-center">
+                    <h3 class="text-xl font-bold" style="color: #43AA8B;">Amal Leon (CTO)</h3>
+                    <p class="font-medium text-gray-600">MS in CS, Univ. of New Haven</p>
+                    <p class="text-sm text-gray-500 mt-2">The technical lead building the proprietary pairing and refilling IP.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h4 class="text-xl font-bold">Jai Shankar</h4>
-                    <p class="text-lg" style="color: #00A8E8;">COO (Finance & Ops)</p>
+                <div class="kpi-card text-center">
+                    <h3 class="text-xl font-bold" style="color: #43AA8B;">Jai Shankar (COO)</h3>
+                    <p class="font-medium text-gray-600">ex-Cognizant</p>
+                    <p class="text-sm text-gray-500 mt-2">Manages operations, finance, and on-ground driver relations.</p>
                 </div>
-            </div>
-            <div class="mt-8 bg-blue-50 p-6 rounded-lg text-center font-semibold text-2xl" style="color: #006280; background-color: #CAF0F8;">
-                Incubated at IIT Madras Research Park
             </div>
         </section>
 
@@ -228,120 +238,162 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.font.weight = '500';
+            Chart.defaults.color = '#111827';
 
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                } else {
-                    return label;
+            const requiredTooltipCallback = {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
                 }
             };
             
-            const chartColors = {
-                blue: '#00A8E8',
-                darkBlue: '#006280',
-                orange: '#FF8811',
-                red: '#F34213',
-                green: '#00B345'
-            };
+            const chartColors = ['#43AA8B', '#F3722C', '#F9C74F', '#F94144', '#90BE6D', '#577590'];
 
-            if (document.getElementById('marketChart')) {
-                new Chart(document.getElementById('marketChart').getContext('2d'), {
+            const marketSizeCtx = document.getElementById('marketSizeChart');
+            if (marketSizeCtx) {
+                new Chart(marketSizeCtx.getContext('2d'), {
                     type: 'bar',
                     data: {
-                        labels: ['TAM (India)', 'SAM (Major Cities)', 'SOM (Chennai)'],
+                        labels: ['TAM ($870M)', 'SAM ($435M)', 'SOM ($25M)'],
                         datasets: [{
-                            label: 'Market Size ($ Million)',
+                            label: 'Market Size (in $M)',
                             data: [870, 435, 25],
-                            backgroundColor: [chartColors.darkBlue, chartColors.blue, chartColors.orange],
+                            backgroundColor: [chartColors[0], chartColors[1], chartColors[2]],
+                            borderRadius: 4
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
-                            tooltip: { callbacks: { title: tooltipTitleCallback } }
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: requiredTooltipCallback
+                            }
                         },
                         scales: {
-                            y: { title: { display: true, text: 'Platform Revenue ($M)' } }
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Platform Revenue (in $ Millions)'
+                                }
+                            }
                         }
                     }
                 });
             }
 
-            if (document.getElementById('audienceChart')) {
-                new Chart(document.getElementById('audienceChart').getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: [['Working', 'Professionals'], ['College', 'Students'], ['Women', 'Residents']],
-                        datasets: [{
-                            label: 'Population (Millions)',
-                            data: [252, 40, 39],
-                            backgroundColor: [chartColors.blue, chartColors.blue, chartColors.blue],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: { callbacks: { title: tooltipTitleCallback } }
-                        },
-                        scales: {
-                            x: { title: { display: true, text: 'Population (Millions)' } }
-                        }
-                    }
-                });
-            }
-
-            if (document.getElementById('fundsChart')) {
-                new Chart(document.getElementById('fundsChart').getContext('2d'), {
+            const useOfFundsCtx = document.getElementById('useOfFundsChart');
+            if (useOfFundsCtx) {
+                new Chart(useOfFundsCtx.getContext('2d'), {
                     type: 'doughnut',
                     data: {
-                        labels: ['Marketing', 'Team', 'Tech', 'Others'],
+                        labels: [
+                            ['Marketing & Growth', '(48%)'],
+                            ['Team & Hiring', '(21%)'],
+                            ['Tech & Legal', '(18%)'],
+                            ['Contingency', '(13%)']
+                        ],
                         datasets: [{
-                            data: [51, 20, 15, 14],
-                            backgroundColor: [chartColors.blue, chartColors.orange, chartColors.darkBlue, chartColors.green],
+                            label: 'Use of Funds',
+                            data: [48, 21, 18, 13],
+                            backgroundColor: chartColors,
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            hoverOffset: 4
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { position: 'bottom' },
-                            tooltip: { callbacks: { title: tooltipTitleCallback } }
-                        }
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: requiredTooltipCallback
+                            }
+                        },
+                        cutout: '60%'
                     }
                 });
             }
 
-            if (document.getElementById('projectionChart')) {
-                new Chart(document.getElementById('projectionChart').getContext('2d'), {
-                    type: 'line',
+            const unitEconomicsCtx = document.getElementById('unitEconomicsChart');
+            if (unitEconomicsCtx) {
+                new Chart(unitEconomicsCtx.getContext('2d'), {
+                    type: 'bar',
                     data: {
-                        labels: ['Q4 FY26', 'Q1 FY27', 'Q2 FY27', 'Q3 FY27', 'Q4 FY27', 'Dec 2027'],
-                        datasets: [{
-                            label: 'Projected MRR (₹ Lakhs)',
-                            data: [4.8, 8.5, 15.7, 24.0, 35.0, 75.0],
-                            borderColor: chartColors.blue,
-                            backgroundColor: 'rgba(0, 168, 232, 0.1)',
-                            fill: true,
-                            tension: 0.1
-                        }]
+                        labels: ['Avg. Ride (Total Revenue: ₹7.33)'],
+                        datasets: [
+                            {
+                                label: 'EBITDA (+27%)',
+                                data: [1.98],
+                                backgroundColor: chartColors[0], 
+                                stack: 'a'
+                            },
+                            {
+                                label: 'Marketing Cost',
+                                data: [2.29],
+                                backgroundColor: chartColors[3],
+                                stack: 'a'
+                            },
+                            {
+                                label: 'Ops Allocation',
+                                data: [1.62],
+                                backgroundColor: chartColors[1],
+                                stack: 'a'
+                            },
+                            {
+                                label: 'Tech Stack Cost',
+                                data: [1.09],
+                                backgroundColor: chartColors[2],
+                                stack: 'a'
+                            }
+                        ]
                     },
                     options: {
+                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
-                            tooltip: { callbacks: { title: tooltipTitleCallback } }
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: requiredTooltipCallback
+                            },
+                            title: {
+                                display: true,
+                                text: 'Revenue & Cost Breakdown Per Ride (in ₹)'
+                            }
                         },
                         scales: {
-                            y: { title: { display: true, text: 'MRR (₹ Lakhs)' } }
+                            x: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'Amount (₹)'
+                                }
+                            },
+                            y: {
+                                stacked: true
+                            }
                         }
                     }
                 });
@@ -350,3 +402,4 @@
     </script>
 </body>
 </html>
+
